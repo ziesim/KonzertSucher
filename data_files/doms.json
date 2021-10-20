@@ -1,0 +1,8 @@
+{
+  "schweinfurt": {
+    "titles": "title-header ic-title-header ic-float-left",
+    "dates": "nextdate ic-next-date ic-clearfix",
+    "subpages": "event ic-event ic-clearfix"
+  },
+  "wiesbaden": [{ "title": "" }, { "dates": "" }, { "subpages": "" }]
+}

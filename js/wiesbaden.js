@@ -44,11 +44,10 @@ async function scrapeBand() {
           }
         }
         // RETURN HERE !!
+        return result;
       },
       { bands, doms }
     );
-
-    console.log(foundObjects);
 
     for (l = 0; l < foundObjects.length; l += 2) {
       if (foundObjects[l] != undefined && foundObjects[l + 1] != undefined) {
@@ -76,7 +75,8 @@ async function scrapeBand() {
   }
   if (foundItems === 0) {
     const h2 = document.getElementById("h2Wiesbaden");
-    h2.innerHTML = "Wiesbaden : Nichts Interessantes gefunden !";
+    // h2.innerHTML = "Wiesbaden : Nichts Interessantes gefunden !";
+    h2.innerHTML = "Wiesbaden : Funktion in Entwicklung!";
   }
 
   await browser.close();

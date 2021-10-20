@@ -4,5 +4,9 @@
     "dates": "nextdate ic-next-date ic-clearfix",
     "subpages": "event ic-event ic-clearfix"
   },
-  "wiesbaden": [{ "title": "" }, { "dates": "" }, { "subpages": "" }]
+  "wiesbaden": [
+    { "title": "events_info" },
+    { "dates": "events_date" },
+    { "subpages": "events_text" }
+  ]
 }

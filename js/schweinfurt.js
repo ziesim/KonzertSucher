@@ -12,41 +12,41 @@ async function scrapeBand() {
 
   const urlsSchweinfurtLength = Object.keys(urls.schweinfurt).length;
 
+  let foundItems = 0;
+
   for (i = 0; i < urlsSchweinfurtLength; i++) {
     await page.goto(urls.schweinfurt[i], { waitUntil: "networkidle2" });
 
-    let foundObjects = await page.evaluate(
+    const foundObjects = await page.evaluate(
       ({ bands, doms }) => {
-        let result = [];
+        const result = [];
 
-        // Schweinfurt
-
-        let titles = document.querySelectorAll(
+        const titles = document.querySelectorAll(
           `div[class="${doms.schweinfurt.titles}"]`
         );
 
-        let dates = document.querySelectorAll(
+        const dates = document.querySelectorAll(
           `div[class="${doms.schweinfurt.dates}"]`
         );
 
-        let subpages = document.querySelectorAll(
+        const subpages = document.querySelectorAll(
           `div[class="${doms.schweinfurt.subpages}"] > a`
         );
 
         for (j = 0; j < titles.length; j++) {
-          let title = titles[j].innerText;
-          let checkTitle = title.toLowerCase();
-          let date = dates[j].innerText;
+          const title = titles[j].innerText;
+          const checkTitle = title.toLowerCase();
+          const date = dates[j].innerText;
 
           for (k = 0; k < bands.length; k++) {
-            let index = checkTitle.indexOf(bands[k]);
+            const index = checkTitle.indexOf(bands[k]);
             if (index === 0) {
               if (
                 checkTitle.includes(bands[k]) &&
                 !checkTitle.includes("verlegt") &&
                 !checkTitle.includes("fällt aus")
               ) {
-                return [`${title} : ${date}`, `${subpages[j]}`];
+                result.push(`${title} : ${date}`, `${subpages[j]}`);
               }
             } else {
               continue;
@@ -54,24 +54,38 @@ async function scrapeBand() {
           }
         }
         // RETURN HERE !!
+        return result;
       },
       { bands, doms }
     );
 
-    if (foundObjects != undefined) {
-      const li = document.createElement("li");
-      li.innerHTML = foundObjects[0];
-      li.addEventListener("click", function (e) {
-        if (e.target) {
-          window.open(
-            `${foundObjects[1]}`,
-            "popup",
-            "width=" + screen.width + ",height=" + screen.height
-          );
-        }
-      });
-      ul.append(li);
+    for (l = 0; l < foundObjects.length; l += 2) {
+      if (foundObjects[l] != undefined && foundObjects[l + 1] != undefined) {
+        const li = document.createElement("li");
+        li.innerHTML = foundObjects[l];
+        const subpage = foundObjects[l + 1];
+        li.addEventListener("click", function (e) {
+          if (e.target) {
+            window.open(
+              subpage,
+              "popup",
+              "width=" + screen.width + ",height=" + screen.height
+            );
+          }
+        });
+        ul.append(li);
+        foundItems++;
+      }
+
+      if (foundItems === 1) {
+        const h2 = document.getElementById("h2Schweinfurt");
+        h2.innerHTML = "Schweinfurt : Veranstaltungen gefunden !";
+      }
     }
+  }
+  if (foundItems === 0) {
+    const h2 = document.getElementById("h2Schweinfurt");
+    h2.innerHTML = "Schweinfurt : Nichts Interessantes gefunden !";
   }
 
   await browser.close();
